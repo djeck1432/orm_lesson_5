@@ -25,8 +25,8 @@ class Flat(models.Model):
     active = models.BooleanField("Активно-ли объявление", db_index=True)
     construction_year = models.IntegerField("Год постройки здания", null=True, blank=True, db_index=True)
 
-    new_building = models.NullBooleanField("Новостройка", null=True)
-    like = models.ManyToManyField(User, verbose_name="Кто лайкнул:", null=True, blank=True)
+    new_building = models.NullBooleanField("Новостройка", db_index=True)
+    like = models.ManyToManyField(User, verbose_name="Кто лайкнул:", blank=True, related_name='flat_likes')
 
 
     def __str__(self):
@@ -34,16 +34,16 @@ class Flat(models.Model):
 
 
 class Complain(models.Model):
-    user = models.ForeignKey(User, verbose_name='Кто жаловался:', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='Кто жаловался:', on_delete=models.CASCADE, related_name='complain_users')
     flat = models.ForeignKey(Flat, verbose_name='Квартира, на которую пожаловались:', on_delete=models.CASCADE)
-    text = models.TextField("Текст жалобы", null=True)
+    text = models.TextField("Текст жалобы")
 
 
 class Owner(models.Model):
     customer = models.CharField("ФИО владельца", max_length=200, db_index=True)
     customer_phonenumber = models.CharField("Номер владельца", max_length=20, db_index=True)
     customer_phone_pure = models.CharField("Нормализованый номер владельца", max_length=20, blank=True, db_index=True)
-    customer_flat = models.ManyToManyField(Flat, verbose_name="Квартиры в собствености:", related_name='flat_set')
+    customer_flat = models.ManyToManyField(Flat, verbose_name="Квартиры в собствености:", related_name='flat_set', blank=True)
 
     def __str__(self):
         return self.customer
