@@ -4,9 +4,6 @@ from django.contrib.auth.models import User
 
 
 class Flat(models.Model):
-    # owner = models.CharField("ФИО владельца", max_length=200)
-    # owners_phonenumber = models.CharField("Номер владельца", max_length=20)
-    # owner_phone_pure = models.CharField('Нормализованый номер владельца:', max_length=20, blank=True)
     created_at = models.DateTimeField("Когда создано объявление", default=timezone.now, db_index=True)
 
     description = models.TextField("Текст объявления", blank=True)
@@ -35,7 +32,7 @@ class Flat(models.Model):
 
 class Complain(models.Model):
     user = models.ForeignKey(User, verbose_name='Кто жаловался:', on_delete=models.CASCADE, related_name='user_complains')
-    flat = models.ForeignKey(Flat, verbose_name='Квартира, на которую пожаловались:', on_delete=models.CASCADE, related_name='user_flats')
+    flat = models.ForeignKey(Flat, verbose_name='Квартира, на которую пожаловались:', on_delete=models.CASCADE, related_name='flat_complains')
     text = models.TextField("Текст жалобы")
 
 
